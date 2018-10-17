@@ -39,7 +39,7 @@
          alert("当前状态不支持修改");
      }else{
          var url = "wmsUnitController.do?goUpdate&id="+id;
-         createwindow("仓位信息表修改",url,700,400);
+         createwindow("单位信息表修改",url,700,400);
      }
  }
  //自定义按钮-查看
