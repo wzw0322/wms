@@ -22,7 +22,7 @@ import org.jeecgframework.poi.excel.annotation.Excel;
  * @Title: Entity
  * @Description: 仓库信息表
  * @author onlineGenerator
- * @date 2018-10-10 21:29:31
+ * @date 2018-10-17 19:54:50
  * @version V1.0   
  *
  */
@@ -41,9 +41,15 @@ public class WmsWareHouseEntity implements java.io.Serializable {
 	/**仓库名称*/
 	@Excel(name="仓库名称",width=15)
 	private java.lang.String houseName;
+	/**长（米）*/
+	@Excel(name="长（米）",width=15)
+	private java.lang.Double houseLength;
+	/**宽（米）*/
+	@Excel(name="宽（米）",width=15)
+	private java.lang.Double houseWidth;
 	/**仓库面积*/
 	@Excel(name="仓库面积",width=15)
-	private java.lang.String houseSquare;
+	private java.lang.Double houseSquare;
 	/**仓库状态*/
 	@Excel(name="仓库状态",width=15,dicCode="wh_status")
 	private java.lang.Integer houseStatus;
@@ -139,20 +145,54 @@ public class WmsWareHouseEntity implements java.io.Serializable {
 		this.houseName = houseName;
 	}
 	/**
-	 *方法: 取得java.lang.String
-	 *@return: java.lang.String  仓库面积
+	 *方法: 取得java.lang.Double
+	 *@return: java.lang.Double  长（米）
 	 */
 
-	@Column(name ="HOUSE_SQUARE",nullable=true,length=32)
-	public java.lang.String getHouseSquare(){
+	@Column(name ="HOUSE_LENGTH",nullable=true,scale=2,length=11)
+	public java.lang.Double getHouseLength(){
+		return this.houseLength;
+	}
+
+	/**
+	 *方法: 设置java.lang.Double
+	 *@param: java.lang.Double  长（米）
+	 */
+	public void setHouseLength(java.lang.Double houseLength){
+		this.houseLength = houseLength;
+	}
+	/**
+	 *方法: 取得java.lang.Double
+	 *@return: java.lang.Double  宽（米）
+	 */
+
+	@Column(name ="HOUSE_WIDTH",nullable=true,scale=2,length=11)
+	public java.lang.Double getHouseWidth(){
+		return this.houseWidth;
+	}
+
+	/**
+	 *方法: 设置java.lang.Double
+	 *@param: java.lang.Double  宽（米）
+	 */
+	public void setHouseWidth(java.lang.Double houseWidth){
+		this.houseWidth = houseWidth;
+	}
+	/**
+	 *方法: 取得java.lang.Double
+	 *@return: java.lang.Double  仓库面积
+	 */
+
+	@Column(name ="HOUSE_SQUARE",nullable=true,scale=2,length=11)
+	public java.lang.Double getHouseSquare(){
 		return this.houseSquare;
 	}
 
 	/**
-	 *方法: 设置java.lang.String
-	 *@param: java.lang.String  仓库面积
+	 *方法: 设置java.lang.Double
+	 *@param: java.lang.Double  仓库面积
 	 */
-	public void setHouseSquare(java.lang.String houseSquare){
+	public void setHouseSquare(java.lang.Double houseSquare){
 		this.houseSquare = houseSquare;
 	}
 	/**

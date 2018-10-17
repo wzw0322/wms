@@ -42,10 +42,26 @@
 			</div>
 		</div>
 		<div class="form-group">
+			<label for="houseLength" class="col-sm-3 control-label">长（米）：</label>
+			<div class="col-sm-7">
+				<div class="input-group" style="width:100%">
+					<input id="houseLength" name="houseLength" type="text" maxlength="11" class="form-control input-sm" placeholder="请输入长（米）"  datatype="*" ignore="checked" />
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="houseWidth" class="col-sm-3 control-label">宽（米）：</label>
+			<div class="col-sm-7">
+				<div class="input-group" style="width:100%">
+					<input id="houseWidth" name="houseWidth" type="text" maxlength="11" class="form-control input-sm" placeholder="请输入宽（米）"  datatype="*" ignore="checked" />
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
 			<label for="houseSquare" class="col-sm-3 control-label">仓库面积：</label>
 			<div class="col-sm-7">
 				<div class="input-group" style="width:100%">
-					<input id="houseSquare" name="houseSquare" type="text" maxlength="32" class="form-control input-sm" placeholder="请输入仓库面积"  datatype="n" ignore="checked" />
+					<input id="houseSquare" name="houseSquare" type="text" maxlength="11" class="form-control input-sm" placeholder="请输入仓库面积"  datatype="n" ignore="checked" />
 				</div>
 			</div>
 		</div>

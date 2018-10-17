@@ -21,7 +21,7 @@
 		<label for="areaId" class="col-sm-3 control-label">区域名称：</label>
 		<div class="col-sm-7">
 			<div class="input-group" style="width:100%">
-               <t:dictSelect field="areaId" readonly="readonly" type="list" extendJson="{class:'form-control input-sm'}"  datatype="*"  dictTable="wms_area" dictField="id" dictText="area_name"  hasLabel="false"  title="区域名称" defaultVal="${wmsWareHouse.areaId}"></t:dictSelect>
+               <t:dictSelect field="areaId" type="list" readonly="readonly" extendJson="{class:'form-control input-sm'}"  datatype="*"  dictTable="wms_area" dictField="id" dictText="area_name"  hasLabel="false"  title="区域名称" defaultVal="${wmsWareHouse.areaId}"></t:dictSelect>
 			</div>
 		</div>
 	</div>
@@ -42,10 +42,26 @@
 		</div>
 	</div>
 	<div class="form-group">
+		<label for="houseLength" class="col-sm-3 control-label">长（米）：</label>
+		<div class="col-sm-7">
+			<div class="input-group" style="width:100%">
+				<input id="houseLength" name="houseLength" readonly="readonly" value='${wmsWareHouse.houseLength}' type="text" maxlength="11" class="form-control input-sm" placeholder="请输入长（米）"  datatype="*" ignore="checked" />
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="houseWidth" class="col-sm-3 control-label">宽（米）：</label>
+		<div class="col-sm-7">
+			<div class="input-group" style="width:100%">
+				<input id="houseWidth" name="houseWidth" readonly="readonly" value='${wmsWareHouse.houseWidth}' type="text" maxlength="11" class="form-control input-sm" placeholder="请输入宽（米）"  datatype="*" ignore="checked" />
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
 		<label for="houseSquare" class="col-sm-3 control-label">仓库面积：</label>
 		<div class="col-sm-7">
 			<div class="input-group" style="width:100%">
-				<input id="houseSquare" readonly="readonly" name="houseSquare" value='${wmsWareHouse.houseSquare}' type="text" maxlength="32" class="form-control input-sm" placeholder="请输入仓库面积"  datatype="n" ignore="checked" />
+				<input id="houseSquare" name="houseSquare" readonly="readonly" value='${wmsWareHouse.houseSquare}' type="text" maxlength="11" class="form-control input-sm" placeholder="请输入仓库面积"  datatype="*" ignore="checked" />
 			</div>
 		</div>
 	</div>
@@ -61,7 +77,7 @@
 		<label for="houseLeader" class="col-sm-3 control-label">仓库负责人：</label>
 		<div class="col-sm-7">
 			<div class="input-group" style="width:100%">
-				<input id="houseLeader" readonly="readonly" name="houseLeader" value='${wmsWareHouse.houseLeader}' type="text" maxlength="32" class="form-control input-sm" placeholder="请输入仓库负责人"  datatype="*" ignore="checked" />
+				<input id="houseLeader" name="houseLeader" readonly="readonly" value='${wmsWareHouse.houseLeader}' type="text" maxlength="32" class="form-control input-sm" placeholder="请输入仓库负责人"  datatype="*" ignore="checked" />
 			</div>
 		</div>
 	</div>
@@ -69,7 +85,7 @@
 		<label for="houseTel" class="col-sm-3 control-label">联系电话：</label>
 		<div class="col-sm-7">
 			<div class="input-group" style="width:100%">
-				<input id="houseTel" readonly="readonly" name="houseTel" value='${wmsWareHouse.houseTel}' type="text" maxlength="11" class="form-control input-sm" placeholder="请输入联系电话"  datatype="m" ignore="checked" />
+				<input id="houseTel" name="houseTel" readonly="readonly" value='${wmsWareHouse.houseTel}' type="text" maxlength="11" class="form-control input-sm" placeholder="请输入联系电话"  datatype="m" ignore="checked" />
 			</div>
 		</div>
 	</div>
