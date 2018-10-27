@@ -1,4 +1,4 @@
-package com.cxy.wms.handel;
+package com.cxy.instore.handel;
 
 /**
  * 功能描述:初始化质检单号 <br>

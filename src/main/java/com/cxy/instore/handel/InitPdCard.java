@@ -1,4 +1,4 @@
-package com.cxy.wms.handel;
+package com.cxy.instore.handel;
 
 /**
  * 功能描述:初始化盘点单号 <br>
