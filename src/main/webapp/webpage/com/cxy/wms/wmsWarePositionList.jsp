@@ -9,7 +9,7 @@
    <t:dgFunOpt funname="doUpdatePosition(id)" title="修改" urlclass="ace_button" urlfont="fa-edit"/>
    <t:dgDelOpt title="删除" url="wmsWarePositionController.do?doDel&id={id}" urlclass="ace_button"  urlfont="fa-trash-o"/>
    <t:dgCol title="主键"  field="id"  hidden="true"  queryMode="single"  width="120"></t:dgCol>
-   <t:dgCol title="仓库名称"  field="whId"  query="true"  queryMode="single"  dictionary="wms_ware_house,id,house_name" dictCondition="where isdel=0" width="120"></t:dgCol>
+   <t:dgCol title="仓库名称"  field="whId"  query="true"  queryMode="single"  dictionary="wms_ware_house,id,house_name" dictCondition="where isdel=0 and (house_status=0 or house_status=1)" width="120"></t:dgCol>
    <t:dgCol title="仓位编码"  field="positionCode"  query="true"  queryMode="single"  width="120"></t:dgCol>
    <t:dgCol title="仓位名称"  field="positionName"  query="true"  queryMode="single"  width="120"></t:dgCol>
    <t:dgCol title="长（厘米）"  field="positionLength"  queryMode="single"  width="120"></t:dgCol>
@@ -41,8 +41,8 @@
 		//自定义按钮-修改
 	 	function doUpdatePosition(id,index){
 	 		var row = $('#wmsWarePositionList').datagrid('getData').rows[index];
-            if(row.positionStatus != 0){
-                alert("当前状态不支持修改");
+            if(row.positionStatus != 0 && row.positionStatus != 1){
+                tip("当前状态不支持修改");
             }else{
                 var url = "wmsWarePositionController.do?goUpdate&id="+id;
                 createwindow("仓位信息表修改",url,700,400);

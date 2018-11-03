@@ -37,7 +37,7 @@
 			<label for="goodsType" class="col-sm-3 control-label">货物类型：</label>
 			<div class="col-sm-7">
 				<div class="input-group" style="width:100%">
-					<t:dictSelect field="goodsType" type="list" extendJson="{class:'form-control input-sm'}"  datatype="*"  dictTable="wms_goods_type" dictField="id" dictText="goods_name"  hasLabel="false"  title="货物类型"></t:dictSelect>     
+					<t:dictSelect field="goodsType" type="list" extendJson="{class:'form-control input-sm'}"  datatype="*"  dictTable="wms_goods_type" dictField="id" dictCondition="where isdel=0 and goods_status=1" dictText="goods_name"  hasLabel="false"  title="货物类型"></t:dictSelect>
 				</div>
 			</div>
 		</div>
@@ -61,7 +61,7 @@
 			<label for="goodsUnit" class="col-sm-3 control-label">单位：</label>
 			<div class="col-sm-7">
 				<div class="input-group" style="width:100%">
-					<t:dictSelect field="goodsUnit" type="list" extendJson="{class:'form-control input-sm'}"  datatype="*"  dictTable="wms_unit" dictField="id" dictText="unit_name"  hasLabel="false"  title="单位"></t:dictSelect>     
+					<t:dictSelect field="goodsUnit" type="list" extendJson="{class:'form-control input-sm'}"  datatype="*"  dictTable="wms_unit" dictField="id" dictText="unit_name"  dictCondition="where isdel=0 and unit_status=1" hasLabel="false"  title="单位"></t:dictSelect>
 				</div>
 			</div>
 		</div>

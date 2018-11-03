@@ -41,8 +41,8 @@
  //自定义按钮-修改
  function doUpdateHouse(id,index){
      var row = $('#wmsWareHouseList').datagrid('getData').rows[index];
-     if(row.houseStatus != 0 && row.houseStatus != 3){
-         alert("当前状态不支持修改");
+     if(row.houseStatus != 0 && row.houseStatus != 1){
+         tip("当前状态不支持修改");
      }else{
          var url = "wmsWareHouseController.do?goUpdate&id="+id;
          createwindow("仓库需求与信息表修改",url,700,400);

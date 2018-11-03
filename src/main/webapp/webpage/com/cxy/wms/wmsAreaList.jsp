@@ -39,12 +39,11 @@
      var param = {"id":id};
      $.get("wmsAreaController.do?doIsUpdate",param,function(data){
          var jsonData=JSON.parse(data);
-         console.log("返回的data是："+jsonData);
          if(jsonData.result == 1){
              var url = "wmsAreaController.do?goUpdate&id="+id;
              createwindow("仓库需求与信息表修改",url,700,400);
          }else{
-             alert("当前状态无法修改");
+             tip("当前状态无法修改");
          }
      });
  }

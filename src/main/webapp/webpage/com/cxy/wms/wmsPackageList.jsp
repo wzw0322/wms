@@ -40,8 +40,8 @@
 		//自定义按钮-修改
 	 	function doUpdatePackage(id,index){
             var row = $('#wmsPackageList').datagrid('getData').rows[index];
-            if(row.packStatus != 2){
-                alert("当前状态不支持修改");
+            if(row.packStatus != 1){
+                tip("当前状态不支持修改");
             }else{
                 var url = "wmsPackageController.do?goUpdate&id="+id;
                 createwindow("包装信息表修改",url,700,400);

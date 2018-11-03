@@ -24,7 +24,7 @@
 					仓库名称：
 				</div>
 				<div class="col-md-9 col-sm-9 col-xs-9 bt-content">
-	            	<t:dictSelect field="whId" type="select" hasLabel="false" title="仓库名称" extendJson="{class:'form-control input-sm'}"  datatype="*"  dictTable="wms_ware_house" dictField="id" dictText="house_name" dictCondition="where isdel=0"></t:dictSelect>
+	            	<t:dictSelect field="whId" type="select" hasLabel="false" title="仓库名称" extendJson="{class:'form-control input-sm'}"  datatype="*"  dictTable="wms_ware_house" dictField="id" dictText="house_name" dictCondition="where isdel=0 and (house_status=0 or house_status=1)"></t:dictSelect>
 				</div>
 			</div>
 		</div>

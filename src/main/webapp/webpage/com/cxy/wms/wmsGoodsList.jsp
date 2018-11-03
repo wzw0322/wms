@@ -11,10 +11,10 @@
    <t:dgCol title="主键"  field="id"  hidden="true"  queryMode="single"  width="120"></t:dgCol>
    <t:dgCol title="货物编码"  field="goodsCode"  query="true"  queryMode="single"  width="120"></t:dgCol>
    <t:dgCol title="货物名称"  field="goodsName"  query="true"  queryMode="single"  width="120"></t:dgCol>
-   <t:dgCol title="货物类型"  field="goodsType"  query="true"  queryMode="single"  dictionary="wms_goods_type,id,goods_name"  width="120"></t:dgCol>
+   <t:dgCol title="货物类型"  field="goodsType"  query="true"  queryMode="single"  dictionary="wms_goods_type,id,goods_name" dictCondition="where isdel=0 and goods_status=1" width="120"></t:dgCol>
    <t:dgCol title="货物状态"  field="goodsStatus"  query="true"  queryMode="single"  dictionary="wh_simple"  width="120"></t:dgCol>
    <t:dgCol title="保质期"  field="goodsKeep"  hidden="true"  queryMode="single"  width="120"></t:dgCol>
-   <t:dgCol title="单位"  field="goodsUnit"  hidden="true"  queryMode="single"  dictionary="wms_unit,id,unit_name"  width="120"></t:dgCol>
+   <t:dgCol title="单位"  field="goodsUnit"  hidden="true"  queryMode="single"  dictionary="wms_unit,id,unit_name" dictCondition="where isdel=0 and unit_status=1" width="120"></t:dgCol>
    <t:dgCol title="备注"  field="goodsDes"  hidden="true"  queryMode="single"  width="200"></t:dgCol>
    <t:dgCol title="创建人名称"  field="createName"  queryMode="single"  width="120"></t:dgCol>
    <t:dgCol title="创建人登录名称"  field="createBy"  hidden="true"  queryMode="single"  width="120"></t:dgCol>
@@ -41,7 +41,7 @@
 	 	function doUpdateGoods(id,index){
             var row = $('#wmsGoodsList').datagrid('getData').rows[index];
             if(row.goodsStatus != 1){
-                alert("当前状态不支持修改");
+                tip("当前状态不支持修改");
             }else{
                 var url = "wmsGoodsController.do?goUpdate&id="+id;
                 createwindow("货物信息表修改",url,700,400);

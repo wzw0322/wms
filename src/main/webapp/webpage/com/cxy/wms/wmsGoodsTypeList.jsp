@@ -36,8 +36,8 @@
 		//自定义按钮-修改
 	 	function doUpdateGoodsType(id,index){
             var row = $('#wmsGoodsTypeList').datagrid('getData').rows[index];
-            if(row.goodsStatus != 2){
-                alert("当前状态不支持修改");
+            if(row.goodsStatus != 1){
+                tip("当前状态不支持修改");
             }else{
                 var url = "wmsGoodsTypeController.do?goUpdate&id="+id;
                 createwindow("货物类型表修改",url,700,400);

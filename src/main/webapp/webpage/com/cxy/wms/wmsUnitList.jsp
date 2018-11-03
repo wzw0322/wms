@@ -36,7 +36,7 @@
  function doUpdateUnit(id,index){
      var row = $('#wmsUnitList').datagrid('getData').rows[index];
      if(row.unitStatus != 1){
-         alert("当前状态不支持修改");
+         tip("当前状态不支持修改");
      }else{
          var url = "wmsUnitController.do?goUpdate&id="+id;
          createwindow("单位信息表修改",url,700,400);
