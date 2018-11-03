@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>入库单</title>
+  <title>托盘信息表</title>
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <t:base type="jquery,aceform,DatePicker,validform,ueditor"></t:base>
@@ -15,151 +15,151 @@
 </head>
 
  <body>
-	<t:formvalid formid="formobj" dialog="true" usePlugin="password" layout="table" action="wmsInstoreCardController.do?doAdd" tiptype="1" >
+	<t:formvalid formid="formobj" dialog="true" usePlugin="password" layout="table" action="wmsPalletController.do?doUpdate" tiptype="1" >
 			<input type="hidden" id="btn_sub" class="btn_sub"/>
-			<input type="hidden" id="id" name="id"/>
+			<input type="hidden" name="id" value='${wmsPalletPage.id}' >
+			
+			
 			<div class="tab-wrapper">
 			    <!-- tab -->
 			    <ul class="nav nav-tabs">
-			      <li role="presentation" class="active"><a href="javascript:void(0);">入库单</a></li>
+			      <li role="presentation" class="active"><a href="javascript:void(0);">托盘信息表</a></li>
 			    </ul>
 			    <!-- tab内容 -->
 			    <div class="con-wrapper" id="con-wrapper1" style="display: block;">
 			      <div class="row form-wrapper">
 							<div class="row show-grid">
 			          <div class="col-xs-3 text-center">
-			          	<b>入库单号：</b>
+			          	<b>托盘编码：</b>
 			          </div>
 			          		<div class="col-xs-3">
-								<input id="instoreCode" placeholder="自动生成" readonly="readonly" name="instoreCode" maxlength="32" type="text" class="form-control"  ignore="ignore" />
+								<input id="palletCode" name="palletCode" maxlength="32" type="text" class="form-control" datatype="*" ignore="checked"  value='${wmsPalletPage.palletCode}' />
 						<span class="Validform_checktip" style="float:left;height:0px;"></span>
-						<label class="Validform_label" style="display: none">入库单号</label>
+						<label class="Validform_label" style="display: none">托盘编码</label>
 			          </div>
 			          
 			        
 			          <div class="col-xs-3 text-center">
-			          	<b>入库订单号：</b>
+			          	<b>托盘材质：</b>
 			          </div>
 			          		<div class="col-xs-3">
-								<input id="orderCode" placeholder="点击选择订单号" name="orderCode" type="text" class="form-control"  ignore="ignore"  onclick="popupClick(this,'order_code,customer_name,goods_name,quantity,weight,src_address,dest_address,trans_mode','orderCode,customerName,goodsName,quantity,weight,srcAddress,destAddress,transMode','book_init_instore')"  />
+							  <t:dictSelect field="palletMaterial" type="list" extendJson="{class:'form-control',style:'width:158px'}" datatype="*" typeGroupCode="palletMade"  defaultVal="${wmsPalletPage.palletMaterial}"  hasLabel="false"  title="托盘材质"></t:dictSelect>
 						<span class="Validform_checktip" style="float:left;height:0px;"></span>
-						<label class="Validform_label" style="display: none">入库订单号</label>
+						<label class="Validform_label" style="display: none">托盘材质</label>
 			          </div>
 							</div>
 			          
 			        
 							<div class="row show-grid">
 			          <div class="col-xs-3 text-center">
-			          	<b>仓库名称：</b>
+			          	<b>托盘类型：</b>
 			          </div>
 			          		<div class="col-xs-3">
-							  <t:dictSelect field="wareId" type="list" extendJson="{class:'form-control',style:'width:158px'}" dictTable="wms_ware_house" dictCondition="where isdel=0" dictField="id" dictText="house_name"  hasLabel="false"  title="仓库名称"></t:dictSelect>
+							  <t:dictSelect field="palletType" type="list" extendJson="{class:'form-control',style:'width:158px'}" datatype="*" typeGroupCode="palletType"  defaultVal="${wmsPalletPage.palletType}"  hasLabel="false"  title="托盘类型"></t:dictSelect>
 						<span class="Validform_checktip" style="float:left;height:0px;"></span>
-						<label class="Validform_label" style="display: none">仓库名称</label>
+						<label class="Validform_label" style="display: none">托盘类型</label>
 			          </div>
 			          
 			        
 			          <div class="col-xs-3 text-center">
-			          	<b>入库类型：</b>
+			          	<b>托盘型号：</b>
 			          </div>
 			          		<div class="col-xs-3">
-							  <t:dictSelect field="instoreType" type="list" extendJson="{class:'form-control',style:'width:158px'}" datatype="n"  typeGroupCode="inSType"  hasLabel="false"  title="入库类型"></t:dictSelect>
+								<input id="palletModel" name="palletModel" maxlength="32" type="text" class="form-control" datatype="*" ignore="checked"  value='${wmsPalletPage.palletModel}' />
 						<span class="Validform_checktip" style="float:left;height:0px;"></span>
-						<label class="Validform_label" style="display: none">入库类型</label>
+						<label class="Validform_label" style="display: none">托盘型号</label>
 			          </div>
 							</div>
 			          
 			        
 							<div class="row show-grid">
 			          <div class="col-xs-3 text-center">
-			          	<b>客户名称：</b>
+			          	<b>生产厂商：</b>
 			          </div>
 			          		<div class="col-xs-3">
-								<input id="customerName" name="customerName" maxlength="50" type="text" class="form-control"  ignore="ignore" />
+								<input id="palletProducer" name="palletProducer" maxlength="100" type="text" class="form-control" datatype="*" ignore="checked"  value='${wmsPalletPage.palletProducer}' />
 						<span class="Validform_checktip" style="float:left;height:0px;"></span>
-						<label class="Validform_label" style="display: none">客户名称</label>
+						<label class="Validform_label" style="display: none">生产厂商</label>
 			          </div>
 			          
 			        
 			          <div class="col-xs-3 text-center">
-			          	<b>货品名称：</b>
+			          	<b>长（毫米）：</b>
 			          </div>
 			          		<div class="col-xs-3">
-								<input id="goodsName" name="goodsName" maxlength="32" type="text" class="form-control"  datatype="*" ignore="checked" />
+								<input id="palletLength" name="palletLength" maxlength="11" type="text" class="form-control" datatype="*" ignore="checked"  value='${wmsPalletPage.palletLength}' />
 						<span class="Validform_checktip" style="float:left;height:0px;"></span>
-						<label class="Validform_label" style="display: none">货品名称</label>
+						<label class="Validform_label" style="display: none">长（毫米）</label>
 			          </div>
 							</div>
 			          
 			        
 							<div class="row show-grid">
 			          <div class="col-xs-3 text-center">
-			          	<b>运输方式：</b>
+			          	<b>宽（毫米）：</b>
 			          </div>
 			          		<div class="col-xs-3">
-								<input id="transMode" name="transMode" maxlength="32" type="text" class="form-control"  ignore="ignore" />
+								<input id="palletWidth" name="palletWidth" maxlength="11" type="text" class="form-control" datatype="*" ignore="checked"  value='${wmsPalletPage.palletWidth}' />
 						<span class="Validform_checktip" style="float:left;height:0px;"></span>
-						<label class="Validform_label" style="display: none">运输方式</label>
+						<label class="Validform_label" style="display: none">宽（毫米）</label>
 			          </div>
 			          
 			        
 			          <div class="col-xs-3 text-center">
-			          	<b>发运地：</b>
+			          	<b>高（毫米）：</b>
 			          </div>
 			          		<div class="col-xs-3">
-								<input id="srcAddress" name="srcAddress" maxlength="160" type="text" class="form-control"  ignore="ignore" />
+								<input id="palletHeight" name="palletHeight" maxlength="11" type="text" class="form-control" datatype="*" ignore="checked"  value='${wmsPalletPage.palletHeight}' />
 						<span class="Validform_checktip" style="float:left;height:0px;"></span>
-						<label class="Validform_label" style="display: none">发运地</label>
+						<label class="Validform_label" style="display: none">高（毫米）</label>
 			          </div>
 							</div>
 			          
 			        
 							<div class="row show-grid">
 			          <div class="col-xs-3 text-center">
-			          	<b>到达地：</b>
+			          	<b>价格：</b>
 			          </div>
 			          		<div class="col-xs-3">
-								<input id="destAddress" name="destAddress" maxlength="160" type="text" class="form-control"  ignore="ignore" />
+								<input id="palletPrice" name="palletPrice" maxlength="11" type="text" class="form-control" datatype="d" ignore="checked"  value='${wmsPalletPage.palletPrice}' />
 						<span class="Validform_checktip" style="float:left;height:0px;"></span>
-						<label class="Validform_label" style="display: none">到达地</label>
+						<label class="Validform_label" style="display: none">价格</label>
 			          </div>
 			          
 			        
 			          <div class="col-xs-3 text-center">
-			          	<b>数量：</b>
+			          	<b>静载（T）：</b>
 			          </div>
 			          		<div class="col-xs-3">
-								<input id="quantity" name="quantity" maxlength="11" type="text" class="form-control"  datatype="*" ignore="checked" />
+								<input id="palletStaticLoad" name="palletStaticLoad" maxlength="11" type="text" class="form-control" datatype="/^(-?\d+)(\.\d+)?$/"  ignore="ignore"  value='${wmsPalletPage.palletStaticLoad}' />
 						<span class="Validform_checktip" style="float:left;height:0px;"></span>
-						<label class="Validform_label" style="display: none">数量</label>
+						<label class="Validform_label" style="display: none">静载（T）</label>
 			          </div>
 							</div>
 			          
 			        
 							<div class="row show-grid">
 			          <div class="col-xs-3 text-center">
-			          	<b>重量：</b>
+			          	<b>动载（T）：</b>
 			          </div>
 			          		<div class="col-xs-3">
-								<input id="weight" name="weight" maxlength="11" type="text" class="form-control"  datatype="*" ignore="checked" />
+								<input id="palletLiveLoad" name="palletLiveLoad" maxlength="11" type="text" class="form-control" datatype="/^(-?\d+)(\.\d+)?$/"  ignore="ignore"  value='${wmsPalletPage.palletLiveLoad}' />
 						<span class="Validform_checktip" style="float:left;height:0px;"></span>
-						<label class="Validform_label" style="display: none">重量</label>
+						<label class="Validform_label" style="display: none">动载（T）</label>
 			          </div>
 			          
 			        
 			          <div class="col-xs-3 text-center">
-			          	<b>单位：</b>
+			          	<b>状态：</b>
 			          </div>
 			          		<div class="col-xs-3">
-							  <t:dictSelect field="uint" type="list" extendJson="{class:'form-control',style:'width:158px'}" datatype="*" dictTable="wms_unit" dictCondition="where isdel=0" dictField="id" dictText="unit_name"  hasLabel="false"  title="单位"></t:dictSelect>
+							  <t:dictSelect field="palletStatus" type="list" extendJson="{class:'form-control',style:'width:158px'}" datatype="*" typeGroupCode="palletStat"  defaultVal="${wmsPalletPage.palletStatus}"  hasLabel="false"  title="状态"></t:dictSelect>
 						<span class="Validform_checktip" style="float:left;height:0px;"></span>
-						<label class="Validform_label" style="display: none">单位</label>
+						<label class="Validform_label" style="display: none">状态</label>
 			          </div>
 							</div>
 			          
 			        
-			        
-			       
 			          <div class="row" id = "sub_tr" style="display: none;">
 				        <div class="col-xs-12 layout-header">
 				          <div class="col-xs-6"></div>
@@ -198,5 +198,5 @@
 
 </script>
  </body>
-<script src = "webpage/com/cxy/instore/wmsInstoreCard.js"></script>		
+<script src = "webpage/com/cxy/pallet/wmsPallet.js"></script>		
 </html>

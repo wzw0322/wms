@@ -15,7 +15,7 @@
    <t:dgCol title="入库单号"  field="instoreCode"  hidden="true"  queryMode="single"  dictionary="book_init_check,instoreCode@wareId@csName@csCode@goodsName@goodsType@goodsCode,in_code@w_id@cs_name@cs_code@g_name@g_type@g_code"  popup="true"  width="120"></t:dgCol>
    <t:dgCol title="客户名称"  field="csName"  hidden="true"  queryMode="single"  width="120"></t:dgCol>
    <t:dgCol title="客户编码"  field="csCode"  hidden="true"  queryMode="single"  width="120"></t:dgCol>
-   <t:dgCol title="仓库名称"  field="wareId"  hidden="true"  queryMode="single"  width="120"></t:dgCol>
+   <t:dgCol title="仓库名称"  field="wareName"  hidden="true"  queryMode="single"  width="120"></t:dgCol>
    <t:dgCol title="质检类型"  field="qcType"  query="true"  queryMode="single"  dictionary="qc_type"  width="120"></t:dgCol>
    <t:dgCol title="货物名称"  field="goodsName"  queryMode="single"  width="120"></t:dgCol>
    <t:dgCol title="货物编码"  field="goodsCode"  hidden="true"  queryMode="single"  width="120"></t:dgCol>
@@ -23,7 +23,7 @@
    <t:dgCol title="应检数量"  field="needCheckNum"  hidden="true"  queryMode="single"  width="120"></t:dgCol>
    <t:dgCol title="已检数量"  field="checkedNum"  hidden="true"  queryMode="single"  width="120"></t:dgCol>
    <t:dgCol title="抽检数量"  field="randomNum"  hidden="true"  queryMode="single"  width="120"></t:dgCol>
-   <t:dgCol title="单位"  field="unit"  hidden="true"  queryMode="single"  dictionary="wms_unit,id,unit_name"  width="120"></t:dgCol>
+   <t:dgCol title="单位"  field="unit"  hidden="true"  queryMode="single"  dictionary="wms_unit,id,unit_name" dictCondition="where isdel=0"  width="120"></t:dgCol>
    <t:dgCol title="合格数量"  field="qualifiedNum"  hidden="true"  queryMode="single"  width="120"></t:dgCol>
    <t:dgCol title="不合格数量"  field="unqualifiedNum"  hidden="true"  queryMode="single"  width="120"></t:dgCol>
    <t:dgCol title="质检状态"  field="qcStatus"  query="true"  queryMode="single"  dictionary="qc_status"  width="120"></t:dgCol>
@@ -50,7 +50,7 @@
  function doUpdateCheck(id,index){
      var row = $('#wmsCheckCardList').datagrid('getData').rows[index];
      if(row.qcStatus != 0){
-         alert("当前状态不支持修改");
+         tip("当前状态不支持修改");
      }else{
          var url = "wmsCheckCardController.do?goUpdate&id="+id;
          createwindow("质检单修改",url,700,400);

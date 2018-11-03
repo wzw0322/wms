@@ -1,5 +1,5 @@
 package com.cxy.wms.controller;
-import com.cxy.wms.dao.WareBaseInfoDao;
+import com.cxy.dao.WareBaseInfoDao;
 import com.cxy.wms.entity.WmsAreaEntity;
 import com.cxy.wms.service.WmsAreaServiceI;
 

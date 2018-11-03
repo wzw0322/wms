@@ -49,8 +49,10 @@ public class WmsCheckCardEntity implements java.io.Serializable {
 	@Excel(name="客户编码",width=15)
 	private java.lang.String csCode;
 	/**仓库名称*/
-	@Excel(name="仓库名称",width=15)
+	@Excel(name="仓库ID",width=15)
 	private java.lang.String wareId;
+	@Excel(name = "仓库名称",width=15)
+	private java.lang.String wareName;
 	/**质检类型*/
 	@Excel(name="质检类型",width=15,dicCode="qc_type")
 	private java.lang.Integer qcType;
@@ -224,6 +226,16 @@ public class WmsCheckCardEntity implements java.io.Serializable {
 	public void setWareId(java.lang.String wareId){
 		this.wareId = wareId;
 	}
+
+	@Column(name ="WARE_NAME",nullable=true,length=32)
+	public String getWareName() {
+		return wareName;
+	}
+
+	public void setWareName(String wareName) {
+		this.wareName = wareName;
+	}
+
 	/**
 	 *方法: 取得java.lang.Integer
 	 *@return: java.lang.Integer  质检类型

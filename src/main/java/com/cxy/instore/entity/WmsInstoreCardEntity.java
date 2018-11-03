@@ -41,6 +41,8 @@ public class WmsInstoreCardEntity implements java.io.Serializable {
 	/**仓库名称*/
 	@Excel(name="仓库名称",width=15,dictTable ="wms_ware_house",dicCode ="id",dicText ="house_name")
 	private java.lang.String wareId;
+	@Excel(name = "仓库名称")
+	private java.lang.String wareName;
 	/**仓位*/
 	private java.lang.String positionId;
 	/**入库类型*/
@@ -158,6 +160,16 @@ public class WmsInstoreCardEntity implements java.io.Serializable {
 	public void setWareId(java.lang.String wareId){
 		this.wareId = wareId;
 	}
+
+	@Column(name ="WARE_NAME",nullable=true,length=32)
+	public String getWareName() {
+		return wareName;
+	}
+
+	public void setWareName(String wareName) {
+		this.wareName = wareName;
+	}
+
 	/**
 	 *方法: 取得java.lang.String
 	 *@return: java.lang.String  仓位

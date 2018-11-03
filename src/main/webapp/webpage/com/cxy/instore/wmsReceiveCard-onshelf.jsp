@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>质检单</title>
+  <title>收货单</title>
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <t:base type="jquery,aceform,DatePicker,validform,ueditor"></t:base>
@@ -15,35 +15,37 @@
 </head>
 
  <body>
-	<t:formvalid formid="formobj" dialog="true" usePlugin="password" layout="table" action="wmsCheckCardController.do?doAdd" tiptype="1" >
+	<t:formvalid formid="formobj" dialog="true" usePlugin="password" layout="table" action="wmsReceiveCardController.do?doOnShelf" tiptype="1" >
 			<input type="hidden" id="btn_sub" class="btn_sub"/>
-			<input type="hidden" id="id" name="id"/>
+			<input type="hidden" name="id" value='${wmsReceiveCardPage.id}' >
+			
+			
 			<div class="tab-wrapper">
 			    <!-- tab -->
 			    <ul class="nav nav-tabs">
-			      <li role="presentation" class="active"><a href="javascript:void(0);">质检单</a></li>
+			      <li role="presentation" class="active"><a href="javascript:void(0);">收货单</a></li>
 			    </ul>
 			    <!-- tab内容 -->
 			    <div class="con-wrapper" id="con-wrapper1" style="display: block;">
 			      <div class="row form-wrapper">
 							<div class="row show-grid">
 			          <div class="col-xs-3 text-center">
-			          	<b>质检单号：</b>
+			          	<b>收货单号：</b>
 			          </div>
 			          		<div class="col-xs-3">
-								<input id="qcCode" name="qcCode" placeholder="自动生成" readonly="readonly" maxlength="32" type="text" class="form-control"  ignore="ignore" />
+								<input id="shCode" readonly="readonly" name="shCode" maxlength="32" type="text" class="form-control" ignore="ignore"  value='${wmsReceiveCardPage.shCode}' />
 						<span class="Validform_checktip" style="float:left;height:0px;"></span>
-						<label class="Validform_label" style="display: none">质检单号</label>
+						<label class="Validform_label" style="display: none">收货单号</label>
 			          </div>
 			          
 			        
 			          <div class="col-xs-3 text-center">
-			          	<b>入库单号：</b>
+			          	<b>质检单号：</b>
 			          </div>
 			          		<div class="col-xs-3">
-								<input id="instoreCode" name="instoreCode" placeholder="点击选择入库单号" type="text" class="form-control"  ignore="ignore"  onclick="popupClick(this,'in_code,w_name,cs_name,cs_code,g_name,g_type,g_code','instoreCode,wareName,csName,csCode,goodsName,goodsType,goodsCode','book_init_check')"  />
+								<input id="qcCode" readonly="readonly" name="qcCode" type="text" class="form-control"  ignore="ignore"  onclick="popupClick(this,'qc_code,cs_name,cs_code,ware_name,unit,goods_name','qcCode,csName,csCode,wareName,unit,goodsName','book_init_receive')" value='${wmsReceiveCardPage.qcCode}'/>
 						<span class="Validform_checktip" style="float:left;height:0px;"></span>
-						<label class="Validform_label" style="display: none">入库单号</label>
+						<label class="Validform_label" style="display: none">质检单号</label>
 			          </div>
 							</div>
 			          
@@ -53,7 +55,7 @@
 			          	<b>客户名称：</b>
 			          </div>
 			          		<div class="col-xs-3">
-								<input id="csName" name="csName" maxlength="32" type="text" class="form-control"  datatype="*" ignore="checked" />
+								<input id="csName" name="csName" readonly="readonly" maxlength="50" type="text" class="form-control" datatype="*" ignore="checked"  value='${wmsReceiveCardPage.csName}' />
 						<span class="Validform_checktip" style="float:left;height:0px;"></span>
 						<label class="Validform_label" style="display: none">客户名称</label>
 			          </div>
@@ -63,7 +65,7 @@
 			          	<b>客户编码：</b>
 			          </div>
 			          		<div class="col-xs-3">
-								<input id="csCode" name="csCode" maxlength="32" type="text" class="form-control"  datatype="*" ignore="checked" />
+								<input id="csCode" name="csCode" readonly="readonly" maxlength="32" type="text" class="form-control" datatype="*" ignore="checked"  value='${wmsReceiveCardPage.csCode}' />
 						<span class="Validform_checktip" style="float:left;height:0px;"></span>
 						<label class="Validform_label" style="display: none">客户编码</label>
 			          </div>
@@ -75,135 +77,124 @@
 			          	<b>仓库名称：</b>
 			          </div>
 			          		<div class="col-xs-3">
-								<input id="wareName" name="wareName" maxlength="36" type="text" class="form-control"  datatype="*" ignore="checked" />
+								<input id="wareName" name="wareName" readonly="readonly" maxlength="32" type="text" class="form-control" datatype="*" ignore="checked"  value='${wmsReceiveCardPage.wareName}' />
 						<span class="Validform_checktip" style="float:left;height:0px;"></span>
 						<label class="Validform_label" style="display: none">仓库名称</label>
 			          </div>
-			          
-			        
+
+					<div class="col-xs-3 text-center">
+						<b>上架仓位：</b>
+					</div>
+					<div class="col-xs-3">
+						<t:dictSelect field="positionId" type="list" extendJson="{class:'form-control',style:'width:158px'}" datatype="*" dictTable="wms_ware_position"  dictField="id" dictCondition="where wh_id='${wmsReceiveCardPage.wareId}'" dictText="position_name"  defaultVal="${wmsReceiveCardPage.positionId}"  hasLabel="false"  title="上架仓位"></t:dictSelect>
+						<span class="Validform_checktip" style="float:left;height:0px;"></span>
+							<label class="Validform_label" style="display: none">上架仓位</label>
+					</div>
+						</div>
+
+
+					  <div class="row show-grid">
+
+
 			          <div class="col-xs-3 text-center">
-			          	<b>质检类型：</b>
+			          	<b>单位：</b>
 			          </div>
 			          		<div class="col-xs-3">
-							  <t:dictSelect field="qcType" type="list" extendJson="{class:'form-control',style:'width:158px'}" datatype="*" typeGroupCode="qc_type"  hasLabel="false"  title="质检类型"></t:dictSelect>
+								<%--<input id="unit" name="unit" maxlength="36" type="text" class="form-control" datatype="*" ignore="checked"  value='${wmsReceiveCardPage.unit}' />--%>
+									<t:dictSelect field="unit" readonly="readonly" type="list" extendJson="{class:'form-control',style:'width:158px'}" datatype="*" dictTable="wms_unit" dictField="id" dictText="unit_name"  defaultVal="${wmsReceiveCardPage.unit}"  hasLabel="false"  title="单位"></t:dictSelect>
 						<span class="Validform_checktip" style="float:left;height:0px;"></span>
-						<label class="Validform_label" style="display: none">质检类型</label>
+						<label class="Validform_label" style="display: none">单位</label>
 			          </div>
-							</div>
-			          
-			        
-							<div class="row show-grid">
+
 			          <div class="col-xs-3 text-center">
 			          	<b>货物名称：</b>
 			          </div>
 			          		<div class="col-xs-3">
-								<input id="goodsName" name="goodsName" maxlength="32" type="text" class="form-control"  datatype="*" ignore="checked" />
+								<input id="goodsName" name="goodsName" readonly="readonly" maxlength="32" type="text" class="form-control" datatype="*" ignore="checked"  value='${wmsReceiveCardPage.goodsName}' />
 						<span class="Validform_checktip" style="float:left;height:0px;"></span>
 						<label class="Validform_label" style="display: none">货物名称</label>
 			          </div>
 			          
 			        
 			          <div class="col-xs-3 text-center">
-			          	<b>应检数量：</b>
+			          	<b>收货数量：</b>
 			          </div>
 			          		<div class="col-xs-3">
-								<input id="needCheckNum" name="needCheckNum" maxlength="32" type="text" class="form-control"  datatype="*" ignore="checked" />
+								<input id="shNum" name="shNum" readonly="readonly" maxlength="32" type="text" class="form-control" datatype="*" ignore="checked"  value='${wmsReceiveCardPage.shNum}' />
 						<span class="Validform_checktip" style="float:left;height:0px;"></span>
-						<label class="Validform_label" style="display: none">应检数量</label>
+						<label class="Validform_label" style="display: none">收货数量</label>
+			          </div>
+
+			          <div class="col-xs-3 text-center">
+			          	<b>现收数量：</b>
+			          </div>
+			          		<div class="col-xs-3">
+								<input id="currentShNum" readonly="readonly" name="currentShNum" maxlength="32" type="text" class="form-control" datatype="*" ignore="checked"  value='${wmsReceiveCardPage.currentShNum}' />
+						<span class="Validform_checktip" style="float:left;height:0px;"></span>
+						<label class="Validform_label" style="display: none">现收数量</label>
+			          </div>
+					  </div>
+
+
+					  <div class="row show-grid">
+			        
+			          <div class="col-xs-3 text-center">
+			          	<b>体积：</b>
+			          </div>
+			          		<div class="col-xs-3">
+								<input id="volume" name="volume" readonly="readonly" maxlength="32" type="text" class="form-control" datatype="/^(-?\d+)(\.\d+)?$/"  ignore="ignore"  value='${wmsReceiveCardPage.volume}' />
+						<span class="Validform_checktip" style="float:left;height:0px;"></span>
+						<label class="Validform_label" style="display: none">体积</label>
+			          </div>
+
+			          <div class="col-xs-3 text-center">
+			          	<b>毛重：</b>
+			          </div>
+			          		<div class="col-xs-3">
+								<input id="grossWeight" name="grossWeight" readonly="readonly" maxlength="32" type="text" class="form-control" datatype="/^(-?\d+)(\.\d+)?$/"  ignore="ignore"  value='${wmsReceiveCardPage.grossWeight}' />
+						<span class="Validform_checktip" style="float:left;height:0px;"></span>
+						<label class="Validform_label" style="display: none">毛重</label>
+			          </div>
+					  </div>
+
+
+					  <div class="row show-grid">
+			          
+			        
+			          <div class="col-xs-3 text-center">
+			          	<b>净重：</b>
+			          </div>
+			          		<div class="col-xs-3">
+								<input id="netWeight" name="netWeight" readonly="readonly"  maxlength="32" type="text" class="form-control" datatype="/^(-?\d+)(\.\d+)?$/"  ignore="ignore"  value='${wmsReceiveCardPage.netWeight}' />
+						<span class="Validform_checktip" style="float:left;height:0px;"></span>
+						<label class="Validform_label" style="display: none">净重</label>
+			          </div>
+
+			          <div class="col-xs-3 text-center">
+			          	<b>是否良品：</b>
+			          </div>
+			          		<div class="col-xs-3">
+								<input id="isGood" name="isGood" readonly="readonly" maxlength="32" type="text" class="form-control" datatype="*" ignore="checked"  value='${wmsReceiveCardPage.isGood}' />
+						<span class="Validform_checktip" style="float:left;height:0px;"></span>
+						<label class="Validform_label" style="display: none">是否良品</label>
+			          </div>
+					  </div>
+
+
+					  <div class="row show-grid">
+			          
+			        
+			          <div class="col-xs-3 text-center">
+			          	<b>备注：</b>
+			          </div>
+			          		<div class="col-xs-3">
+								<input id="shDes" name="shDes" readonly="readonly" maxlength="300" type="text" class="form-control" ignore="ignore"  value='${wmsReceiveCardPage.shDes}' />
+						<span class="Validform_checktip" style="float:left;height:0px;"></span>
+						<label class="Validform_label" style="display: none">备注</label>
 			          </div>
 							</div>
 			          
 			        
-							<div class="row show-grid">
-			          <div class="col-xs-3 text-center">
-			          	<b>已检数量：</b>
-			          </div>
-			          		<div class="col-xs-3">
-								<input id="checkedNum" name="checkedNum" maxlength="32" type="text" class="form-control"  datatype="*" ignore="checked" />
-						<span class="Validform_checktip" style="float:left;height:0px;"></span>
-						<label class="Validform_label" style="display: none">已检数量</label>
-			          </div>
-			          
-			        
-			          <div class="col-xs-3 text-center">
-			          	<b>抽检数量：</b>
-			          </div>
-			          		<div class="col-xs-3">
-								<input id="randomNum" name="randomNum" maxlength="32" type="text" class="form-control"  datatype="/^(-?\d+)(\.\d+)?$/"  ignore="ignore" />
-						<span class="Validform_checktip" style="float:left;height:0px;"></span>
-						<label class="Validform_label" style="display: none">抽检数量</label>
-			          </div>
-							</div>
-			          
-			        
-							<div class="row show-grid">
-			          <div class="col-xs-3 text-center">
-			          	<b>单位：</b>
-			          </div>
-			          		<div class="col-xs-3">
-							  <t:dictSelect field="unit" type="list" extendJson="{class:'form-control',style:'width:158px'}" datatype="*" dictTable="wms_unit" dictField="id" dictText="unit_name"  hasLabel="false"  title="单位"></t:dictSelect>
-						<span class="Validform_checktip" style="float:left;height:0px;"></span>
-						<label class="Validform_label" style="display: none">单位</label>
-			          </div>
-			          
-			        
-			          <div class="col-xs-3 text-center">
-			          	<b>合格数量：</b>
-			          </div>
-			          		<div class="col-xs-3">
-								<input id="qualifiedNum" name="qualifiedNum" maxlength="32" type="text" class="form-control"  datatype="*" ignore="checked" />
-						<span class="Validform_checktip" style="float:left;height:0px;"></span>
-						<label class="Validform_label" style="display: none">合格数量</label>
-			          </div>
-							</div>
-			          
-			        
-							<div class="row show-grid">
-			          <div class="col-xs-3 text-center">
-			          	<b>不合格数量：</b>
-			          </div>
-			          		<div class="col-xs-3">
-								<input id="unqualifiedNum" name="unqualifiedNum" maxlength="32" type="text" class="form-control"  datatype="*" ignore="checked" />
-						<span class="Validform_checktip" style="float:left;height:0px;"></span>
-						<label class="Validform_label" style="display: none">不合格数量</label>
-			          </div>
-			          
-			        
-			          <div class="col-xs-3 text-center">
-			          	<b>质检状态：</b>
-			          </div>
-			          		<div class="col-xs-3">
-							  <t:dictSelect field="qcStatus" type="list" extendJson="{class:'form-control',style:'width:158px'}" datatype="*" typeGroupCode="qc_status"  hasLabel="false"  title="质检状态"></t:dictSelect>
-						<span class="Validform_checktip" style="float:left;height:0px;"></span>
-						<label class="Validform_label" style="display: none">质检状态</label>
-			          </div>
-							</div>
-			          
-			        
-							<div class="row show-grid">
-			          <div class="col-xs-3 text-center">
-			          	<b>质检人：</b>
-			          </div>
-			          		<div class="col-xs-3">
-								<input id="qcMan" name="qcMan" maxlength="50" type="text" class="form-control"  datatype="*" ignore="checked" />
-						<span class="Validform_checktip" style="float:left;height:0px;"></span>
-						<label class="Validform_label" style="display: none">质检人</label>
-			          </div>
-			          
-			        
-			          <div class="col-xs-3 text-center">
-			          	<b>质检时间：</b>
-			          </div>
-			          		<div class="col-xs-3">
-								<input id="qcTime" name="qcTime" type="text"  datatype="*" ignore="checked" style="background: url('plug-in/ace/images/datetime.png') no-repeat scroll right center transparent;" class="form-control" onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" />
-						<span class="Validform_checktip" style="float:left;height:0px;"></span>
-						<label class="Validform_label" style="display: none">质检时间</label>
-			          </div>
-							</div>
-			          
-			        
-			        
-			       
 			          <div class="row" id = "sub_tr" style="display: none;">
 				        <div class="col-xs-12 layout-header">
 				          <div class="col-xs-6"></div>
@@ -242,5 +233,5 @@
 
 </script>
  </body>
-<script src = "webpage/com/cxy/instore/wmsCheckCard.js"></script>		
+<script src = "webpage/com/cxy/instore/wmsReceiveCard.js"></script>		
 </html>

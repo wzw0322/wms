@@ -77,7 +77,7 @@
 			          	<b>仓库名称：</b>
 			          </div>
 			          		<div class="col-xs-3">
-								<input id="wareId" name="wareId" maxlength="36" type="text" class="form-control" datatype="*" ignore="checked"  value='${wmsCheckCardPage.wareId}' />
+								<input id="wareName" name="wareName" maxlength="36" type="text" class="form-control" datatype="*" ignore="checked"  value='${wmsCheckCardPage.wareName}' />
 						<span class="Validform_checktip" style="float:left;height:0px;"></span>
 						<label class="Validform_label" style="display: none">仓库名称</label>
 			          </div>

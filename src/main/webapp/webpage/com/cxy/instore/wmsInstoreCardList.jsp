@@ -51,7 +51,7 @@
  function doUpdateInstore(id,index){
      var row = $('#wmsInstoreCardList').datagrid('getData').rows[index];
      if(row.instoreStatus != 1){
-         alert("当前状态不支持修改");
+         tip("当前状态不支持修改");
      }else{
          var url = "wmsInstoreCardController.do?goUpdate&id="+id;
          createwindow("货物信息表修改",url,700,400);

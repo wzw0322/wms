@@ -1,15 +1,12 @@
-package com.cxy.instore.controller;
-import com.cxy.dao.InstoreMiniDao;
-import com.cxy.instore.entity.WmsCheckCardEntity;
-import com.cxy.instore.entity.WmsInstoreCardEntity;
-import com.cxy.instore.handel.InitCkCard;
-import com.cxy.instore.service.WmsCheckCardServiceI;
+package com.cxy.stock.controller;
+import com.cxy.stock.entity.WmsStockEntity;
+import com.cxy.stock.service.WmsStockServiceI;
 import java.util.ArrayList;
 import java.util.List;
+import java.text.SimpleDateFormat;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.cxy.dao.WareBaseInfoDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,81 +19,93 @@ import org.springframework.web.servlet.ModelAndView;
 import org.jeecgframework.core.common.controller.BaseController;
 import org.jeecgframework.core.common.exception.BusinessException;
 import org.jeecgframework.core.common.hibernate.qbc.CriteriaQuery;
+import org.jeecgframework.core.common.model.common.TreeChildCount;
 import org.jeecgframework.core.common.model.json.AjaxJson;
 import org.jeecgframework.core.common.model.json.DataGrid;
 import org.jeecgframework.core.constant.Globals;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.tag.core.easyui.TagUtil;
+import org.jeecgframework.web.system.pojo.base.TSDepart;
 import org.jeecgframework.web.system.service.SystemService;
 import org.jeecgframework.core.util.MyBeanUtils;
 
+import java.io.OutputStream;
+import org.jeecgframework.core.util.BrowserUtils;
+import org.jeecgframework.poi.excel.ExcelExportUtil;
 import org.jeecgframework.poi.excel.ExcelImportUtil;
 import org.jeecgframework.poi.excel.entity.ExportParams;
 import org.jeecgframework.poi.excel.entity.ImportParams;
+import org.jeecgframework.poi.excel.entity.TemplateExportParams;
 import org.jeecgframework.poi.excel.entity.vo.NormalExcelConstants;
+import org.jeecgframework.poi.excel.entity.vo.TemplateExcelConstants;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.jeecgframework.core.util.ResourceUtil;
 import java.io.IOException;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import java.util.Map;
-
+import java.util.HashMap;
+import org.jeecgframework.core.util.ExceptionUtil;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.jeecgframework.core.beanvalidator.BeanValidators;
 import java.util.Set;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
-
+import java.net.URI;
 import org.springframework.http.MediaType;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.apache.commons.lang3.StringUtils;
+import org.jeecgframework.jwt.util.GsonUtil;
 import org.jeecgframework.jwt.util.ResponseMessage;
 import org.jeecgframework.jwt.util.Result;
 import com.alibaba.fastjson.JSONArray;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 /**   
  * @Title: Controller  
- * @Description: 质检单
+ * @Description: 库存表
  * @author onlineGenerator
- * @date 2018-10-27 20:56:32
+ * @date 2018-10-30 22:21:04
  * @version V1.0   
  *
  */
 @Controller
-@RequestMapping("/wmsCheckCardController")
-@Api(value="WmsCheckCard",description="质检单",tags="wmsCheckCardController")
-public class WmsCheckCardController extends BaseController {
-	private static final Logger logger = LoggerFactory.getLogger(WmsCheckCardController.class);
+@RequestMapping("/wmsStockController")
+@Api(value="WmsStock",description="库存表",tags="wmsStockController")
+public class WmsStockController extends BaseController {
+	private static final Logger logger = LoggerFactory.getLogger(WmsStockController.class);
 
 	@Autowired
-	private WmsCheckCardServiceI wmsCheckCardService;
+	private WmsStockServiceI wmsStockService;
 	@Autowired
 	private SystemService systemService;
 	@Autowired
 	private Validator validator;
-	@Autowired
-	private InstoreMiniDao instoreMiniDao;
-	@Autowired
-	private WareBaseInfoDao wareBaseInfoDao;
-
 	
 	
 
 
 	/**
-	 * 质检单列表 页面跳转
+	 * 库存表列表 页面跳转
 	 * 
 	 * @return
 	 */
 	@RequestMapping(params = "list")
 	public ModelAndView list(HttpServletRequest request) {
-		return new ModelAndView("com/cxy/instore/wmsCheckCardList");
+		return new ModelAndView("com/cxy/stock/wmsStockList");
 	}
 
 	/**
@@ -109,38 +118,38 @@ public class WmsCheckCardController extends BaseController {
 	 */
 
 	@RequestMapping(params = "datagrid")
-	public void datagrid(WmsCheckCardEntity wmsCheckCard,HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
-		CriteriaQuery cq = new CriteriaQuery(WmsCheckCardEntity.class, dataGrid);
+	public void datagrid(WmsStockEntity wmsStock,HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
+		CriteriaQuery cq = new CriteriaQuery(WmsStockEntity.class, dataGrid);
 		//查询条件组装器
-		org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, wmsCheckCard, request.getParameterMap());
+		org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, wmsStock, request.getParameterMap());
 		try{
 		//自定义追加查询条件
 		}catch (Exception e) {
 			throw new BusinessException(e.getMessage());
 		}
 		cq.add();
-		this.wmsCheckCardService.getDataGridReturn(cq, true);
+		this.wmsStockService.getDataGridReturn(cq, true);
 		TagUtil.datagrid(response, dataGrid);
 	}
 	
 	/**
-	 * 删除质检单
+	 * 删除库存表
 	 * 
 	 * @return
 	 */
 	@RequestMapping(params = "doDel")
 	@ResponseBody
-	public AjaxJson doDel(WmsCheckCardEntity wmsCheckCard, HttpServletRequest request) {
+	public AjaxJson doDel(WmsStockEntity wmsStock, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		wmsCheckCard = systemService.getEntity(WmsCheckCardEntity.class, wmsCheckCard.getId());
-		message = "质检单删除成功";
+		wmsStock = systemService.getEntity(WmsStockEntity.class, wmsStock.getId());
+		message = "库存表删除成功";
 		try{
-			wmsCheckCardService.delete(wmsCheckCard);
+			wmsStockService.delete(wmsStock);
 			systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
-			message = "质检单删除失败";
+			message = "库存表删除失败";
 			throw new BusinessException(e.getMessage());
 		}
 		j.setMsg(message);
@@ -148,7 +157,7 @@ public class WmsCheckCardController extends BaseController {
 	}
 	
 	/**
-	 * 批量删除质检单
+	 * 批量删除库存表
 	 * 
 	 * @return
 	 */
@@ -157,18 +166,18 @@ public class WmsCheckCardController extends BaseController {
 	public AjaxJson doBatchDel(String ids,HttpServletRequest request){
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		message = "质检单删除成功";
+		message = "库存表删除成功";
 		try{
 			for(String id:ids.split(",")){
-				WmsCheckCardEntity wmsCheckCard = systemService.getEntity(WmsCheckCardEntity.class, 
+				WmsStockEntity wmsStock = systemService.getEntity(WmsStockEntity.class, 
 				id
 				);
-				wmsCheckCardService.delete(wmsCheckCard);
+				wmsStockService.delete(wmsStock);
 				systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
 			}
 		}catch(Exception e){
 			e.printStackTrace();
-			message = "质检单删除失败";
+			message = "库存表删除失败";
 			throw new BusinessException(e.getMessage());
 		}
 		j.setMsg(message);
@@ -177,36 +186,23 @@ public class WmsCheckCardController extends BaseController {
 
 
 	/**
-	 * 添加质检单
+	 * 添加库存表
 	 * 
 	 * @param ids
 	 * @return
 	 */
 	@RequestMapping(params = "doAdd")
 	@ResponseBody
-	public AjaxJson doAdd(WmsCheckCardEntity wmsCheckCard, HttpServletRequest request) {
+	public AjaxJson doAdd(WmsStockEntity wmsStock, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		message = "质检单添加成功";
+		message = "库存表添加成功";
 		try{
-			//如果添加时质检就标注为通过的话，也要更新入库单的状态为已经质检
-            WmsInstoreCardEntity instoreCardEntity = instoreMiniDao.getInstoreModelByInstoreCode(wmsCheckCard.getInstoreCode());
-			if(wmsCheckCard.getQcStatus() == 1){
-				//将已提交状态的入库单改为已经质检
-				if(instoreCardEntity.getInstoreStatus() == 1){
-					instoreMiniDao.updateInstoreCardStatus(instoreCardEntity.getInstoreCode(), 2);
-				}
-			}
-
-            wmsCheckCard.setWareId(instoreCardEntity.getWareId());
-			wmsCheckCard.setGoodsCode(instoreCardEntity.getGoodsCode());
-			wmsCheckCard.setGoodsType(instoreCardEntity.getGoodsType());
-			wmsCheckCard.setQcCode(InitCkCard.execute());
-			wmsCheckCardService.save(wmsCheckCard);
+			wmsStockService.save(wmsStock);
 			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
 		}catch(Exception e){
 			e.printStackTrace();
-			message = "质检单添加失败";
+			message = "库存表添加失败";
 			throw new BusinessException(e.getMessage());
 		}
 		j.setMsg(message);
@@ -214,34 +210,25 @@ public class WmsCheckCardController extends BaseController {
 	}
 	
 	/**
-	 * 更新质检单
+	 * 更新库存表
 	 * 
 	 * @param ids
 	 * @return
 	 */
 	@RequestMapping(params = "doUpdate")
 	@ResponseBody
-	public AjaxJson doUpdate(WmsCheckCardEntity wmsCheckCard, HttpServletRequest request) {
+	public AjaxJson doUpdate(WmsStockEntity wmsStock, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		message = "质检单更新成功";
-		WmsCheckCardEntity t = wmsCheckCardService.get(WmsCheckCardEntity.class, wmsCheckCard.getId());
+		message = "库存表更新成功";
+		WmsStockEntity t = wmsStockService.get(WmsStockEntity.class, wmsStock.getId());
 		try {
-			//判断是否修改为质检通过，如果通过需要同步更改入库单状态为已经质检
-			if(wmsCheckCard.getQcStatus() == 1 && t.getQcStatus() == 0){
-				WmsInstoreCardEntity instoreCardEntity = instoreMiniDao.getInstoreModelByInstoreCode(wmsCheckCard.getInstoreCode());
-				//将已提交状态的入库单改为已经质检
-				if(instoreCardEntity.getInstoreStatus() == 1){
-					instoreMiniDao.updateInstoreCardStatus(instoreCardEntity.getInstoreCode(), 2);
-				}
-			}
-
-			MyBeanUtils.copyBeanNotNull2Bean(wmsCheckCard, t);
-			wmsCheckCardService.saveOrUpdate(t);
+			MyBeanUtils.copyBeanNotNull2Bean(wmsStock, t);
+			wmsStockService.saveOrUpdate(t);
 			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
 		} catch (Exception e) {
 			e.printStackTrace();
-			message = "质检单更新失败";
+			message = "库存表更新失败";
 			throw new BusinessException(e.getMessage());
 		}
 		j.setMsg(message);
@@ -250,30 +237,30 @@ public class WmsCheckCardController extends BaseController {
 	
 
 	/**
-	 * 质检单新增页面跳转
+	 * 库存表新增页面跳转
 	 * 
 	 * @return
 	 */
 	@RequestMapping(params = "goAdd")
-	public ModelAndView goAdd(WmsCheckCardEntity wmsCheckCard, HttpServletRequest req) {
-		if (StringUtil.isNotEmpty(wmsCheckCard.getId())) {
-			wmsCheckCard = wmsCheckCardService.getEntity(WmsCheckCardEntity.class, wmsCheckCard.getId());
-			req.setAttribute("wmsCheckCardPage", wmsCheckCard);
+	public ModelAndView goAdd(WmsStockEntity wmsStock, HttpServletRequest req) {
+		if (StringUtil.isNotEmpty(wmsStock.getId())) {
+			wmsStock = wmsStockService.getEntity(WmsStockEntity.class, wmsStock.getId());
+			req.setAttribute("wmsStockPage", wmsStock);
 		}
-		return new ModelAndView("com/cxy/instore/wmsCheckCard-add");
+		return new ModelAndView("com/cxy/stock/wmsStock-add");
 	}
 	/**
-	 * 质检单编辑页面跳转
+	 * 库存表编辑页面跳转
 	 * 
 	 * @return
 	 */
 	@RequestMapping(params = "goUpdate")
-	public ModelAndView goUpdate(WmsCheckCardEntity wmsCheckCard, HttpServletRequest req) {
-		if (StringUtil.isNotEmpty(wmsCheckCard.getId())) {
-			wmsCheckCard = wmsCheckCardService.getEntity(WmsCheckCardEntity.class, wmsCheckCard.getId());
-			req.setAttribute("wmsCheckCardPage", wmsCheckCard);
+	public ModelAndView goUpdate(WmsStockEntity wmsStock, HttpServletRequest req) {
+		if (StringUtil.isNotEmpty(wmsStock.getId())) {
+			wmsStock = wmsStockService.getEntity(WmsStockEntity.class, wmsStock.getId());
+			req.setAttribute("wmsStockPage", wmsStock);
 		}
-		return new ModelAndView("com/cxy/instore/wmsCheckCard-update");
+		return new ModelAndView("com/cxy/stock/wmsStock-update");
 	}
 	
 	/**
@@ -283,7 +270,7 @@ public class WmsCheckCardController extends BaseController {
 	 */
 	@RequestMapping(params = "upload")
 	public ModelAndView upload(HttpServletRequest req) {
-		req.setAttribute("controller_name","wmsCheckCardController");
+		req.setAttribute("controller_name","wmsStockController");
 		return new ModelAndView("common/upload/pub_excel_upload");
 	}
 	
@@ -294,16 +281,16 @@ public class WmsCheckCardController extends BaseController {
 	 * @param response
 	 */
 	@RequestMapping(params = "exportXls")
-	public String exportXls(WmsCheckCardEntity wmsCheckCard,HttpServletRequest request,HttpServletResponse response
+	public String exportXls(WmsStockEntity wmsStock,HttpServletRequest request,HttpServletResponse response
 			, DataGrid dataGrid,ModelMap modelMap) {
-		CriteriaQuery cq = new CriteriaQuery(WmsCheckCardEntity.class, dataGrid);
-		org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, wmsCheckCard, request.getParameterMap());
-		List<WmsCheckCardEntity> wmsCheckCards = this.wmsCheckCardService.getListByCriteriaQuery(cq,false);
-		modelMap.put(NormalExcelConstants.FILE_NAME,"质检单");
-		modelMap.put(NormalExcelConstants.CLASS,WmsCheckCardEntity.class);
-		modelMap.put(NormalExcelConstants.PARAMS,new ExportParams("质检单列表", "导出人:"+ResourceUtil.getSessionUser().getRealName(),
+		CriteriaQuery cq = new CriteriaQuery(WmsStockEntity.class, dataGrid);
+		org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, wmsStock, request.getParameterMap());
+		List<WmsStockEntity> wmsStocks = this.wmsStockService.getListByCriteriaQuery(cq,false);
+		modelMap.put(NormalExcelConstants.FILE_NAME,"库存表");
+		modelMap.put(NormalExcelConstants.CLASS,WmsStockEntity.class);
+		modelMap.put(NormalExcelConstants.PARAMS,new ExportParams("库存表列表", "导出人:"+ResourceUtil.getSessionUser().getRealName(),
 			"导出信息"));
-		modelMap.put(NormalExcelConstants.DATA_LIST,wmsCheckCards);
+		modelMap.put(NormalExcelConstants.DATA_LIST,wmsStocks);
 		return NormalExcelConstants.JEECG_EXCEL_VIEW;
 	}
 	/**
@@ -313,11 +300,11 @@ public class WmsCheckCardController extends BaseController {
 	 * @param response
 	 */
 	@RequestMapping(params = "exportXlsByT")
-	public String exportXlsByT(WmsCheckCardEntity wmsCheckCard,HttpServletRequest request,HttpServletResponse response
+	public String exportXlsByT(WmsStockEntity wmsStock,HttpServletRequest request,HttpServletResponse response
 			, DataGrid dataGrid,ModelMap modelMap) {
-    	modelMap.put(NormalExcelConstants.FILE_NAME,"质检单");
-    	modelMap.put(NormalExcelConstants.CLASS,WmsCheckCardEntity.class);
-    	modelMap.put(NormalExcelConstants.PARAMS,new ExportParams("质检单列表", "导出人:"+ResourceUtil.getSessionUser().getRealName(),
+    	modelMap.put(NormalExcelConstants.FILE_NAME,"库存表");
+    	modelMap.put(NormalExcelConstants.CLASS,WmsStockEntity.class);
+    	modelMap.put(NormalExcelConstants.PARAMS,new ExportParams("库存表列表", "导出人:"+ResourceUtil.getSessionUser().getRealName(),
     	"导出信息"));
     	modelMap.put(NormalExcelConstants.DATA_LIST,new ArrayList());
     	return NormalExcelConstants.JEECG_EXCEL_VIEW;
@@ -338,9 +325,9 @@ public class WmsCheckCardController extends BaseController {
 			params.setHeadRows(1);
 			params.setNeedSave(true);
 			try {
-				List<WmsCheckCardEntity> listWmsCheckCardEntitys = ExcelImportUtil.importExcel(file.getInputStream(),WmsCheckCardEntity.class,params);
-				for (WmsCheckCardEntity wmsCheckCard : listWmsCheckCardEntitys) {
-					wmsCheckCardService.save(wmsCheckCard);
+				List<WmsStockEntity> listWmsStockEntitys = ExcelImportUtil.importExcel(file.getInputStream(),WmsStockEntity.class,params);
+				for (WmsStockEntity wmsStock : listWmsStockEntitys) {
+					wmsStockService.save(wmsStock);
 				}
 				j.setMsg("文件导入成功！");
 			} catch (Exception e) {
@@ -360,68 +347,68 @@ public class WmsCheckCardController extends BaseController {
 	
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseBody
-	@ApiOperation(value="质检单列表信息",produces="application/json",httpMethod="GET")
-	public ResponseMessage<List<WmsCheckCardEntity>> list() {
-		List<WmsCheckCardEntity> listWmsCheckCards=wmsCheckCardService.getList(WmsCheckCardEntity.class);
-		return Result.success(listWmsCheckCards);
+	@ApiOperation(value="库存表列表信息",produces="application/json",httpMethod="GET")
+	public ResponseMessage<List<WmsStockEntity>> list() {
+		List<WmsStockEntity> listWmsStocks=wmsStockService.getList(WmsStockEntity.class);
+		return Result.success(listWmsStocks);
 	}
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	@ResponseBody
-	@ApiOperation(value="根据ID获取质检单信息",notes="根据ID获取质检单信息",httpMethod="GET",produces="application/json")
+	@ApiOperation(value="根据ID获取库存表信息",notes="根据ID获取库存表信息",httpMethod="GET",produces="application/json")
 	public ResponseMessage<?> get(@ApiParam(required=true,name="id",value="ID")@PathVariable("id") String id) {
-		WmsCheckCardEntity task = wmsCheckCardService.get(WmsCheckCardEntity.class, id);
+		WmsStockEntity task = wmsStockService.get(WmsStockEntity.class, id);
 		if (task == null) {
-			return Result.error("根据ID获取质检单信息为空");
+			return Result.error("根据ID获取库存表信息为空");
 		}
 		return Result.success(task);
 	}
 
 	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	@ApiOperation(value="创建质检单")
-	public ResponseMessage<?> create(@ApiParam(name="质检单对象")@RequestBody WmsCheckCardEntity wmsCheckCard, UriComponentsBuilder uriBuilder) {
+	@ApiOperation(value="创建库存表")
+	public ResponseMessage<?> create(@ApiParam(name="库存表对象")@RequestBody WmsStockEntity wmsStock, UriComponentsBuilder uriBuilder) {
 		//调用JSR303 Bean Validator进行校验，如果出错返回含400错误码及json格式的错误信息.
-		Set<ConstraintViolation<WmsCheckCardEntity>> failures = validator.validate(wmsCheckCard);
+		Set<ConstraintViolation<WmsStockEntity>> failures = validator.validate(wmsStock);
 		if (!failures.isEmpty()) {
 			return Result.error(JSONArray.toJSONString(BeanValidators.extractPropertyAndMessage(failures)));
 		}
 
 		//保存
 		try{
-			wmsCheckCardService.save(wmsCheckCard);
+			wmsStockService.save(wmsStock);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return Result.error("质检单信息保存失败");
+			return Result.error("库存表信息保存失败");
 		}
-		return Result.success(wmsCheckCard);
+		return Result.success(wmsStock);
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	@ApiOperation(value="更新质检单",notes="更新质检单")
-	public ResponseMessage<?> update(@ApiParam(name="质检单对象")@RequestBody WmsCheckCardEntity wmsCheckCard) {
+	@ApiOperation(value="更新库存表",notes="更新库存表")
+	public ResponseMessage<?> update(@ApiParam(name="库存表对象")@RequestBody WmsStockEntity wmsStock) {
 		//调用JSR303 Bean Validator进行校验，如果出错返回含400错误码及json格式的错误信息.
-		Set<ConstraintViolation<WmsCheckCardEntity>> failures = validator.validate(wmsCheckCard);
+		Set<ConstraintViolation<WmsStockEntity>> failures = validator.validate(wmsStock);
 		if (!failures.isEmpty()) {
 			return Result.error(JSONArray.toJSONString(BeanValidators.extractPropertyAndMessage(failures)));
 		}
 
 		//保存
 		try{
-			wmsCheckCardService.saveOrUpdate(wmsCheckCard);
+			wmsStockService.saveOrUpdate(wmsStock);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return Result.error("更新质检单信息失败");
+			return Result.error("更新库存表信息失败");
 		}
 
 		//按Restful约定，返回204状态码, 无内容. 也可以返回200状态码.
-		return Result.success("更新质检单信息成功");
+		return Result.success("更新库存表信息成功");
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@ApiOperation(value="删除质检单")
+	@ApiOperation(value="删除库存表")
 	public ResponseMessage<?> delete(@ApiParam(name="id",value="ID",required=true)@PathVariable("id") String id) {
 		logger.info("delete[{}]" , id);
 		// 验证
@@ -429,10 +416,10 @@ public class WmsCheckCardController extends BaseController {
 			return Result.error("ID不能为空");
 		}
 		try {
-			wmsCheckCardService.deleteEntityById(WmsCheckCardEntity.class, id);
+			wmsStockService.deleteEntityById(WmsStockEntity.class, id);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return Result.error("质检单删除失败");
+			return Result.error("库存表删除失败");
 		}
 
 		return Result.success();
